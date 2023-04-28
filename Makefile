@@ -8,7 +8,7 @@ HEADER_DIR				= header/
 HEADER_FILE				= philo.h
 
 DIR						=	src/
-SRC			 			= 	main.c	philo_atoi.c
+SRC			 			= 	main.c	philo_atoi.c	init_thread.c	utils.c
 							
 OBJECTS			    	= $(SRC:%.c=$(BUILD_DIR)%.o)
 	
@@ -35,7 +35,7 @@ $(NAME): 				$(OBJECTS)
 						$(CC) $(OBJECTS) -o $(NAME)
 
 sanit :					$(OBJECTS)
-						$(GCC) $(SANITIZE) $(OBJECTS) -o $(NAME)
+						$(CC) $(SANITIZE) $(OBJECTS) -o $(NAME)
 						
 clean:					
 						@${RM} $(OBJECTS)
