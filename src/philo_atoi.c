@@ -14,17 +14,9 @@ static int	check_isspace(const char *str)
 
 static int	handle_sign(char a, char b, int *i)
 {
-	int	sign;
-
-	sign = 1;
-	if ((a == '+' || a == '-')
-		&& (b >= '0' && b <= '9'))
-	{
-		if (a == '-')
-			sign = -1;
+	if (a == '+' && (b >= '0' && b <= '9'))
 		(*i)++;
-	}
-	return (sign);
+	return (1);
 }
 
 int	ft_atoi(const char *str, char *arg)
@@ -48,7 +40,7 @@ int	ft_atoi(const char *str, char *arg)
 	if (str[i] != '\0')
 	{
 		printf("Invalid integer format for argument: %s\n", arg);
-		exit(1);
+		return (-1);
 	}
 	return (nb * sign);
 }
