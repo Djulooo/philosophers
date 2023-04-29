@@ -1,11 +1,5 @@
 .PHONY:     			all $(NAME) clear mkbuild clear clean fclean re sanitize
 
-RED=\033[0;31m
-GREEN=\033[0;32m
-YELLOW=\033[0;33m
-BLUE=\033[0;34m
-NC=\033[0m
-
 NAME					= philo
 
 BUILD_DIR				= build/
@@ -14,7 +8,7 @@ HEADER_DIR				= header/
 HEADER_FILE				= philo.h
 
 DIR						=	src/
-SRC			 			= 	main.c	philo_atoi.c	utils.c	threads.c
+SRC			 			= 	threads.c	main.c	philo_atoi.c	utils.c
 							
 OBJECTS			    	= $(SRC:%.c=$(BUILD_DIR)%.o)
 	
@@ -38,10 +32,10 @@ clear:
 						$(CLEAR)
 						
 $(NAME): 				$(OBJECTS)
-						$(CC) $(OBJECTS) -o $(NAME)
+						$(CC) $(OBJECTS) -o $(NAME) -pthread
 
 sanit :					$(OBJECTS)
-						$(CC) $(SANITIZE) $(OBJECTS) -o $(NAME)
+						$(CC) $(SANITIZE) $(OBJECTS) -o $(NAME) -pthread
 						
 clean:					
 						@${RM} $(OBJECTS)
