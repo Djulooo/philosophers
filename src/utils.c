@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 14:22:02 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/04/29 15:53:14 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/04 16:21:50 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,31 @@ void	free_philo(t_philo *philo, pthread_t *threads)
 		free(philo);
 	if (threads)
 		free(threads);
+}
+
+void	usleep_fraction(int	time)
+{
+	int	res;
+	int	mod;
+	int	index;
+
+	index = 0;
+	res = time / 50;
+	mod = time % 50;
+	while (index < res)
+	{
+		usleep(50);
+		index++;
+	}
+	if (mod != 0)
+		usleep(mod);
+}
+
+void	print_philo_state(t_philo *philo, char *state)
+{
+	time_t timestamp;
+
+    timestamp = philo->time.tv_sec;
+	long long epoch_time_ms = (long long)timestamp * 1000 + philo->time.tv_sec / 1000 - EPOCH_TIME_MS;
+	printf("%lldms philo %d %s\n", epoch_time_ms, philo->id, state);
 }

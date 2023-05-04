@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 00:33:29 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/04/29 16:10:24 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/04 16:08:49 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ void	place_at_table(t_philo *philo, int n_threads)
 		if (i == 0)
 		{
 			philo[i].p_left = &philo[i + 1];
-			philo[i].p_left = &philo[n_threads];
+			philo[i].p_right = &philo[n_threads - 1];
 		}
 		else if (i == n_threads - 1)
 		{
-			philo[i].p_left = &philo[1];
-			philo[i].p_left = &philo[i - 1];
+			philo[i].p_left = &philo[0];
+			philo[i].p_right = &philo[i - 1];
 		}
 		else
 		{
 			philo[i].p_left = &philo[i + 1];
-			philo[i].p_left = &philo[i - 1];
+			philo[i].p_right = &philo[i - 1];
 		}
 		i++;
 	}
@@ -55,6 +55,31 @@ static t_philo	*init_arguments(int argc, char **argv, t_philo *philo)
 	return (philo);
 }
 
+static int	init_struct(int argc, char **argv, int n_threads, t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < n_threads)
+	{
+		philo[i].id = i + 1;
+		philo[i].fork = AVAILABLE;
+		if (pthread_mutex_init(&philo->mutex, NULL) != 0)
+			return (1);
+		if (init_arguments(argc, argv, &philo[i]) == NULL)
+			return (1);
+		i++;
+	}
+	if (n_threads > 1)
+		place_at_table(philo, n_threads);
+	else
+	{
+		philo[i].p_left = &philo[0];
+		philo[i].p_right = &philo[0];
+	}
+	return (0);
+}
+
 static int	init_threads(int n_threads, int argc, char **argv)
 {
 	int			i;
@@ -67,19 +92,23 @@ static int	init_threads(int n_threads, int argc, char **argv)
 	philo = ft_calloc(n_threads, sizeof(t_philo));
 	if (!philo)
 		return (free_philo(philo, threads), 1);
+	if (init_struct(argc, argv, n_threads, philo) == 1)
+		return (free_philo(philo, threads), 1);
 	i = 0;
 	while (i < n_threads)
 	{
-		philo[i].id = i + 1;
-		place_at_table(&philo[i], n_threads);
-		if (init_arguments(argc, argv, &philo[i]) == NULL)
-			return (free_philo(philo, threads), 1);
 		if (pthread_create(&threads[i], NULL, thread_func, (void *)&philo[i]))
 			return (printf("Error pthread\n"), free_philo(philo, threads), 1);
 		i++;
 	}
 	if (thread_join(n_threads, threads) == 1)
 		return (free_philo(philo, threads), 1);
+	i = 0;
+	while (i < n_threads)
+	{
+		pthread_mutex_destroy(&philo->mutex);
+		i++;
+	}
 	return (free_philo(philo, threads), 0);
 }
 
