@@ -6,42 +6,51 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/04 16:12:35 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/10 14:12:22 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	mutex_lock_forks(t_philo *data)
+void	mutex_lock(t_philo *data)
 {
-	if (data->p_left->fork == AVAILABLE && data->fork == AVAILABLE)
-	{
-		data->p_left->fork = UNAVAILABLE;
-		data->fork = UNAVAILABLE;
-		print_philo_state(data, "has taken a fork");
-		pthread_mutex_lock(&(data->mutex));
-		pthread_mutex_lock(&(data->p_left->mutex));
-		print_philo_state(data, "is eating");
-		usleep_fraction(data->n_time_to_eat);
-		pthread_mutex_unlock(&(data->mutex));
-		pthread_mutex_unlock(&(data->p_left->mutex));
-		data->time.tv_sec += data->n_time_to_eat;
-	}
-	data->p_left->fork = AVAILABLE;
-	data->fork = AVAILABLE;
+	if (pthread_mutex_lock(&(data->p_right->mutex)) == 1)
+		return ;
+	print_philo_state(data, "has taken a fork");
+	if (pthread_mutex_lock(&(data->mutex)) == -1)
+		return ;
+	print_philo_state(data, "has taken a fork");
+	data->state = EATING;
+	print_philo_state(data, "is eating");
+	usleep(data->n_time_to_eat * 1000);
+	pthread_mutex_unlock(&(data->p_right->mutex));
+	pthread_mutex_unlock(&(data->mutex));
+	print_philo_state(data, "is sleeping");
+	data->state = SLEEPING;
+	usleep(data->n_time_to_sleep * 1000);
+	data->state = THINKING;
+	print_philo_state(data, "is thinking");
 }
 
 void	*thread_func(void *arg)
 {
 	t_philo	*data;
+	int		meals;
 
 	data = (t_philo *)arg;
-	while (1)
-		mutex_lock_forks(data);
+	meals = data->n_eat;
+	while (data->state != STARVED && data->state != FULL)
+	{
+		mutex_lock(data);
+		if (meals > 0)
+			meals--;
+		if (meals == 0)
+			data->state = FULL;
+	}
 	return (NULL);
 }
 
-int	thread_join(int n_threads, pthread_t threads[])
+int	thread_join_destroy(int n_threads, t_philo *philo, pthread_t threads[])
 {
 	int	i;
 
@@ -53,6 +62,12 @@ int	thread_join(int n_threads, pthread_t threads[])
 			printf("Error joining thread\n");
 			return (1);
 		}
+		i++;
+	}
+	i = 0;
+	while (i < n_threads)
+	{
+		pthread_mutex_destroy(&philo->mutex);
 		i++;
 	}
 	return (0);

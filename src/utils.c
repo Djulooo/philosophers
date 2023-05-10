@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/29 14:22:02 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/04 16:21:50 by jlaisne          ###   ########.fr       */
+/*   Created: 2023/05/10 14:10:17 by jlaisne           #+#    #+#             */
+/*   Updated: 2023/05/10 14:15:58 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,29 +47,23 @@ void	free_philo(t_philo *philo, pthread_t *threads)
 		free(threads);
 }
 
-void	usleep_fraction(int	time)
+long	get_time(t_philo *philo)
 {
-	int	res;
-	int	mod;
-	int	index;
+	long	time;
 
-	index = 0;
-	res = time / 50;
-	mod = time % 50;
-	while (index < res)
-	{
-		usleep(50);
-		index++;
-	}
-	if (mod != 0)
-		usleep(mod);
+	if (gettimeofday(&philo->time_end, NULL) == -1)
+		return (-1);
+	time = (philo->time_end.tv_sec * 1000) + (philo->time_end.tv_usec / 1000);
+	return (time);
 }
 
 void	print_philo_state(t_philo *philo, char *state)
 {
-	time_t timestamp;
+	long	time;
 
-    timestamp = philo->time.tv_sec;
-	long long epoch_time_ms = (long long)timestamp * 1000 + philo->time.tv_sec / 1000 - EPOCH_TIME_MS;
-	printf("%lldms philo %d %s\n", epoch_time_ms, philo->id, state);
+	time = get_time(philo);
+	if (time == -1)
+		return ;
+	printf("%ldms philo %d %s\n", (time - philo->epoch_time_ms), philo->id, state);
 }
+ 

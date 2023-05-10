@@ -14,7 +14,7 @@ OBJECTS			    	= $(SRC:%.c=$(BUILD_DIR)%.o)
 	
 CC						= cc
 CFLAGS					= -Wall -Werror -Wextra
-SANITIZE				= $(CFLAGS) -g3 -fsanitize=address
+SANITIZE				= $(CFLAGS) -g3 -fsanitize=thread
 
 RM 						= rm -rf
 CLEAR					= clear
