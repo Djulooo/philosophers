@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 00:33:29 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/10 15:01:23 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/11 15:22:10 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	place_at_table(t_philo *philo, int n_threads)
 
 static t_philo	*init_arguments(int argc, char **argv, t_philo *philo)
 {
+	philo->stop = 0;
 	philo->n_eat = -2;
 	philo->n_time_to_die = ft_atoi(argv[2], "time_to_die");
 	philo->n_time_to_eat = ft_atoi(argv[3], "time_to_eat");
@@ -43,6 +44,7 @@ static t_philo	*init_arguments(int argc, char **argv, t_philo *philo)
 		return (NULL);
 	philo->epoch_time_ms = (philo->time_start.tv_sec * 1000) \
 		+ (philo->time_start.tv_usec / 1000);
+	philo->last_meal_time = get_time(philo) - philo->epoch_time_ms;
 	return (philo);
 }
 
@@ -63,7 +65,7 @@ static int	init_struct(int argc, char **argv, int n_threads, t_philo *philo)
 	if (n_threads > 1)
 		place_at_table(philo, n_threads);
 	else
-		philo[i].p_right = &philo[0];
+		philo[0].p_right = &philo[0];
 	return (0);
 }
 
@@ -89,6 +91,8 @@ static int	init_threads(int n_threads, int argc, char **argv)
 		usleep(50);
 		i++;
 	}
+	if (check_death(philo, n_threads) == 1)
+		return (free_philo(philo, threads), 1);
 	if (thread_join_destroy(n_threads, philo, threads) == 1)
 		return (free_philo(philo, threads), 1);
 	return (free_philo(philo, threads), 0);
@@ -109,6 +113,6 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	return (printf("Invalid arguments, needed: number_of_philosophers, time_to_die, \
-		time_to_eat, time_to_sleep, \
-			[number_of_times_each_philosopher_must_eat]"), 1);
+			time_to_eat, time_to_sleep, \
+				[number_of_times_each_philosopher_must_eat]"), 1);
 }

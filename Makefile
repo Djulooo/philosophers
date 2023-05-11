@@ -8,7 +8,7 @@ HEADER_DIR				= header/
 HEADER_FILE				= philo.h
 
 DIR						=	src/
-SRC			 			= 	threads.c	main.c	philo_atoi.c	utils.c
+SRC			 			= 	threads.c	main.c	philo_atoi.c	utils.c	is_dead.c
 							
 OBJECTS			    	= $(SRC:%.c=$(BUILD_DIR)%.o)
 	

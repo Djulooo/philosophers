@@ -6,19 +6,20 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/10 14:12:22 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/11 15:24:36 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	mutex_lock(t_philo *data)
+static int	mutex_lock(t_philo *data)
 {
+	data->state = THINKING;
 	if (pthread_mutex_lock(&(data->p_right->mutex)) == 1)
-		return ;
+		return (1);
 	print_philo_state(data, "has taken a fork");
 	if (pthread_mutex_lock(&(data->mutex)) == -1)
-		return ;
+		return (1);
 	print_philo_state(data, "has taken a fork");
 	data->state = EATING;
 	print_philo_state(data, "is eating");
@@ -30,6 +31,7 @@ void	mutex_lock(t_philo *data)
 	usleep(data->n_time_to_sleep * 1000);
 	data->state = THINKING;
 	print_philo_state(data, "is thinking");
+	return (0);
 }
 
 void	*thread_func(void *arg)
@@ -39,13 +41,17 @@ void	*thread_func(void *arg)
 
 	data = (t_philo *)arg;
 	meals = data->n_eat;
-	while (data->state != STARVED && data->state != FULL)
+	while (data->state != FULL)
 	{
-		mutex_lock(data);
+		if (data->stop == 1)
+			return (NULL);
+		if (mutex_lock(data) == 1)
+			return (NULL);
 		if (meals > 0)
 			meals--;
 		if (meals == 0)
 			data->state = FULL;
+		printf("philo[%d] has %d meals left\n", data->id, meals);
 	}
 	return (NULL);
 }

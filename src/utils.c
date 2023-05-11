@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:10:17 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/10 14:15:58 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/11 15:23:35 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,10 @@ void	print_philo_state(t_philo *philo, char *state)
 	long	time;
 
 	time = get_time(philo);
-	if (time == -1)
-		return ;
-	printf("%ldms philo %d %s\n", (time - philo->epoch_time_ms), philo->id, state);
+	if (philo->state == EATING)
+	{
+		philo->last_meal_time = time - philo->epoch_time_ms;
+		// printf("philo[%d] last meal = %ldms\n", philo->id, philo->last_meal_time);
+	}
+	printf("%ldms philo %d %s\n", time - philo->epoch_time_ms, philo->id, state);
 }
- 
