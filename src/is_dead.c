@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:07:06 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/15 11:16:34 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 16:31:06 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,18 @@ int	check_state(t_philo *philo, int n_threads, int i, int full)
 		if ((get_time(philo) - philo->epoch_time_ms) - (philo[i].last_meal_time) > philo->n_time_to_die)
 		{
 			philo[i].state = STARVED;
-			print_philo_state(&philo[i], "has died");
+			if (print_philo_state(&philo[i], "has died") == 1)
+				return (1);
 			i = 0;
 			while (i < n_threads)
 			{
 				philo[i].stop = 1;
+				pthread_mutex_lock(&philo[i].mutex);
+				pthread_mutex_unlock(&philo[i].mutex);
+				pthread_mutex_destroy(&philo[i].mutex);
 				i++;
 			}
+			pthread_mutex_destroy(&philo->write_mutex);
 			return (1);
 		}
 		i++;
@@ -48,7 +53,40 @@ int	check_death(t_philo *philo, int n_threads)
 		full = 0;
 		if (check_state(philo, n_threads, i, full) == 1)
 			return (1);
-		usleep(30);
+		usleep(50);
 	}
+	return (0);
+}
+
+int	thread_join(int n_threads, pthread_t threads[])
+{
+	int	i;
+
+	i = 0;
+	while (i < n_threads)
+	{
+		if (pthread_join(threads[i], NULL))
+		{
+			printf("Error joining thread\n");
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	mutex_destroy(int n_threads, t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < n_threads)
+	{
+		if (pthread_mutex_destroy(&philo->mutex) != 0)
+			return (0);
+		i++;
+	}
+	if (pthread_mutex_destroy(&philo->write_mutex) != 0)
+		return (0);
 	return (1);
 }

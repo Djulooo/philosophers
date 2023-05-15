@@ -6,37 +6,40 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:10:17 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/15 11:25:27 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 15:39:21 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	ft_bzero(void *s, size_t n)
-{
-	unsigned int	i;
-	char			*str;
-
-	i = 0;
-	str = s;
-	while (i < n)
-	{
-		str[i] = '\0';
-		i++;
-	}
-}
-
 void	*ft_calloc(size_t count, size_t size)
 {
 	void	*mem;
+	unsigned int	i;
+	char			*str;
 
 	if (size > 0 && count > SIZE_MAX / size)
 		return (NULL);
 	mem = (void *)malloc(count * size);
 	if (!mem)
 		return (NULL);
-	ft_bzero(mem, (count * size));
+	i = 0;
+	str = mem;
+	while (i < (count * size))
+	{
+		str[i] = '\0';
+		i++;
+	}
 	return (mem);
+}
+
+void	ft_usleep(long time, t_philo *philo)
+{
+    long    start;
+
+    start = get_time(philo);
+    while (get_time(philo) - start < time)
+        usleep(100);
 }
 
 void	free_philo(t_philo *philo, pthread_t *threads)
@@ -57,12 +60,20 @@ long	get_time(t_philo *philo)
 	return (time);
 }
 
-void	print_philo_state(t_philo *philo, char *state)
+int	print_philo_state(t_philo *philo, char *state)
 {
 	long	time;
 
 	time = get_time(philo);
+	if (time == -1)
+		return (1);
 	if (philo->state == SLEEPING)
 		philo->last_meal_time = time - philo->epoch_time_ms;
-	printf("%ldms philo %d %s\n", time - philo->epoch_time_ms, philo->id, state);
+	if (pthread_mutex_lock(&(philo->write_mutex)) == -1)
+		return (1);
+	if (philo->stop != 1)
+		printf("%ldms philo %d %s\n", time - philo->epoch_time_ms, philo->id, state);
+	if (pthread_mutex_unlock(&(philo->write_mutex)) == -1)
+		return (1);
+	return (0);
 }

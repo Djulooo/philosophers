@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 14:13:12 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/15 12:38:27 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 14:51:27 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_philo
 	struct timeval	time_end;
 	struct s_philo	*p_right;
 	pthread_mutex_t	mutex;
+	pthread_mutex_t	write_mutex;
 	t_state			state;
 	long			epoch_time_ms;
 	long			last_meal_time;
@@ -38,7 +39,7 @@ typedef struct s_philo
 	int				n_eat;
 	int				id;
 	int				stop;
+	int				n_philo;
 }	t_philo;
-
 
 #endif

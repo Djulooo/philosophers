@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 00:33:29 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/15 13:05:21 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 16:28:20 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	place_at_table(t_philo *philo, int n_threads)
 			philo[i].p_right = &philo[i - 1];
 		i++;
 	}
+	philo->n_philo = n_threads;
 }
 
 static t_philo	*init_arguments(int argc, char **argv, t_philo *philo)
@@ -66,6 +67,8 @@ static int	init_struct(int argc, char **argv, int n_threads, t_philo *philo)
 		place_at_table(philo, n_threads);
 	else
 		philo[0].p_right = &philo[0];
+	if (pthread_mutex_init(&philo->write_mutex, NULL) != 0)
+		return (1);
 	return (0);
 }
 
@@ -93,8 +96,6 @@ static int	init_threads(int n_threads, int argc, char **argv)
 	if (check_death(philo, n_threads) == 1)
 		return (free_philo(philo, threads), 0);
 	if (thread_join(n_threads, threads) == 1)
-		return (free_philo(philo, threads), 1);
-	if (mutex_destroy(n_threads, philo) == 1)
 		return (free_philo(philo, threads), 1);
 	return (free_philo(philo, threads), 0);
 }
