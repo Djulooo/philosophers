@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/11 15:24:36 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 13:11:56 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static int	mutex_lock(t_philo *data)
 	data->state = EATING;
 	print_philo_state(data, "is eating");
 	usleep(data->n_time_to_eat * 1000);
-	pthread_mutex_unlock(&(data->p_right->mutex));
-	pthread_mutex_unlock(&(data->mutex));
-	print_philo_state(data, "is sleeping");
 	data->state = SLEEPING;
+	print_philo_state(data, "is sleeping");
+	pthread_mutex_unlock(&(data->mutex));
+	pthread_mutex_unlock(&(data->p_right->mutex));
 	usleep(data->n_time_to_sleep * 1000);
 	data->state = THINKING;
 	print_philo_state(data, "is thinking");
@@ -40,23 +40,24 @@ void	*thread_func(void *arg)
 	int		meals;
 
 	data = (t_philo *)arg;
+	if (data->id % 2 == 1)
+		usleep(data->n_time_to_eat * 1000);
 	meals = data->n_eat;
 	while (data->state != FULL)
 	{
 		if (data->stop == 1)
-			return (NULL);
+			break ;
 		if (mutex_lock(data) == 1)
 			return (NULL);
 		if (meals > 0)
 			meals--;
 		if (meals == 0)
 			data->state = FULL;
-		printf("philo[%d] has %d meals left\n", data->id, meals);
 	}
 	return (NULL);
 }
 
-int	thread_join_destroy(int n_threads, t_philo *philo, pthread_t threads[])
+int	thread_join(int n_threads, pthread_t threads[])
 {
 	int	i;
 
@@ -70,11 +71,19 @@ int	thread_join_destroy(int n_threads, t_philo *philo, pthread_t threads[])
 		}
 		i++;
 	}
+	return (0);
+}
+
+int	mutex_destroy(int n_threads, t_philo *philo)
+{
+	int	i;
+
 	i = 0;
 	while (i < n_threads)
 	{
-		pthread_mutex_destroy(&philo->mutex);
+		if (pthread_mutex_destroy(&philo->mutex) != 0)
+			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }

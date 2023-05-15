@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 14:22:29 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/04/29 14:22:30 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 12:50:08 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@ static int	handle_sign(char a, char b, int *i)
 	return (1);
 }
 
+static int	check_max_int(long nb)
+{
+	if (nb > 2147483647)
+		return (1);
+	return (0);
+}
+
 int	ft_atoi(const char *str, char *arg)
 {
 	int		i;
@@ -44,8 +51,8 @@ int	ft_atoi(const char *str, char *arg)
 		sign = handle_sign(str[i], str[i + 1], &i);
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if (nb != ((nb * 10) + (str[i] - '0')) / 10)
-			return ((sign + 1) / -2);
+		if (check_max_int(nb) == 1)
+			break ;
 		nb = nb * 10 + (str[i] - '0');
 		i++;
 	}
