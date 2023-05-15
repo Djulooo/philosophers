@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:07:06 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/15 16:31:06 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:00:35 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,8 @@ int	check_state(t_philo *philo, int n_threads, int i, int full)
 			while (i < n_threads)
 			{
 				philo[i].stop = 1;
-				pthread_mutex_lock(&philo[i].mutex);
-				pthread_mutex_unlock(&philo[i].mutex);
-				pthread_mutex_destroy(&philo[i].mutex);
 				i++;
 			}
-			pthread_mutex_destroy(&philo->write_mutex);
 			return (1);
 		}
 		i++;

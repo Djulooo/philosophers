@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 00:33:29 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/15 16:28:20 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 17:59:38 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static int	init_threads(int n_threads, int argc, char **argv)
 		i++;
 	}
 	if (check_death(philo, n_threads) == 1)
-		return (free_philo(philo, threads), 0);
+		return (thread_join(n_threads, threads), 1);
 	if (thread_join(n_threads, threads) == 1)
 		return (free_philo(philo, threads), 1);
 	return (free_philo(philo, threads), 0);
@@ -114,7 +114,5 @@ int	main(int argc, char **argv)
 			return (1);
 		return (0);
 	}
-	return (printf("Invalid arguments, needed: number_of_philosophers, time_to_die, \
-			time_to_eat, time_to_sleep, \
-				[number_of_times_each_philosopher_must_eat]"), 1);
+	return (printf("Invalid arguments."), 1);
 }
