@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/15 13:11:56 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 14:17:09 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 static int	mutex_lock(t_philo *data)
 {
 	data->state = THINKING;
-	if (pthread_mutex_lock(&(data->p_right->mutex)) == 1)
+	if (pthread_mutex_lock(&(data->mutex)) == -1)
 		return (1);
 	print_philo_state(data, "has taken a fork");
-	if (pthread_mutex_lock(&(data->mutex)) == -1)
+	if (pthread_mutex_lock(&(data->p_right->mutex)) == 1)
 		return (1);
 	print_philo_state(data, "has taken a fork");
 	data->state = EATING;
