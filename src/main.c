@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 00:33:29 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/16 11:16:51 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 13:05:47 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static int	init_threads(int n_threads, int argc, char **argv)
 	}
 	if (check_death(philo, n_threads) == 1)
 		return (thread_join(n_threads, threads), \
-			mutex_destroy(n_threads, philo), free(threads), 1);
+			mutex_destroy(n_threads, philo), free_philo(philo, threads), 1);
 	if (thread_join(n_threads, threads) == 1)
 		return (mutex_destroy(n_threads, philo), free_philo(philo, threads), 1);
 	return (mutex_destroy(n_threads, philo), free_philo(philo, threads), 0);

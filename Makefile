@@ -5,7 +5,7 @@ NAME					= philo
 BUILD_DIR				= build/
 	
 HEADER_DIR				= header/
-HEADER_FILE				= philo.h
+HEADER_FILE				= philo.h	typedef.h
 
 DIR						=	src/
 SRC			 			= 	threads.c	main.c	philo_atoi.c	utils.c	is_dead.c
@@ -19,7 +19,7 @@ SANITIZE				= $(CFLAGS) -g3 -fsanitize=thread
 RM 						= rm -rf
 CLEAR					= clear
 
-$(BUILD_DIR)%.o:		$(DIR)%.c $(HEADER_DIR)/$(HEADER_FILE)
+$(BUILD_DIR)%.o:		$(DIR)%.c $(HEADER_DIR)* Makefile
 						@mkdir -p $(@D)
 						$(CC) $(CFLAGS) -I$(HEADER_DIR) -I/usr/include -O3 -c $< -o $@
 
