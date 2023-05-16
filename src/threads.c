@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/16 13:32:08 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 14:36:28 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ static int	mutex_eat_unlock(t_philo *data)
 		pthread_mutex_unlock(&(data->p_right->mutex));
 		pthread_mutex_unlock(&(data->mutex));
 	}
+	return (0);
+}
+
+static int	philo_sleep(t_philo *data)
+{
 	ft_usleep(data->n_time_to_sleep, data);
 	data->state = THINKING;
 	if (print_philo_state(data, "is thinking") == 1)
@@ -89,6 +94,8 @@ void	*thread_func(void *arg)
 			meals--;
 		if (meals == 0)
 			data->state = FULL;
+		if (data->state != FULL && philo_sleep(data) == 1)
+			return (NULL);
 	}
 	return (NULL);
 }
