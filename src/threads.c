@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/16 13:11:36 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 13:32:08 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	*thread_func(void *arg)
 
 	data = (t_philo *)arg;
 	if (data->id % 2 == 0)
-		ft_usleep((data->n_time_to_eat / 2), data);
+		ft_usleep(data->n_time_to_eat, data);
 	meals = data->n_eat;
 	while (data->state != FULL)
 	{

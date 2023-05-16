@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:10:17 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/16 11:15:58 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 13:50:59 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	print_philo_state(t_philo *philo, char *state)
 	time = get_time(philo);
 	if (time == -1)
 		return (1);
-	if (philo->state == SLEEPING)
+	if (philo->state == EATING)
 		philo->last_meal_time = time - philo->epoch_time_ms;
 	if (pthread_mutex_lock(&(philo->write_mutex)) == -1)
 		return (1);
