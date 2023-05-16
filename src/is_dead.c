@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:07:06 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/16 11:16:24 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 11:30:22 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	thread_join(int n_threads, pthread_t threads[])
 		}
 		i++;
 	}
-	printf("%d\n", i);
 	return (0);
 }
 
