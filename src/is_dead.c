@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:07:06 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/15 18:00:35 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 11:16:24 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	check_state(t_philo *philo, int n_threads, int i, int full)
 			full++;
 		if (full == n_threads)
 			return (1);
-		if ((get_time(philo) - philo->epoch_time_ms) - (philo[i].last_meal_time) > philo->n_time_to_die)
+		if ((get_time(philo) - philo->epoch_time_ms) - \
+			(philo[i].last_meal_time) > philo->n_time_to_die)
 		{
 			philo[i].state = STARVED;
 			if (print_philo_state(&philo[i], "has died") == 1)
@@ -68,6 +69,7 @@ int	thread_join(int n_threads, pthread_t threads[])
 		}
 		i++;
 	}
+	printf("%d\n", i);
 	return (0);
 }
 

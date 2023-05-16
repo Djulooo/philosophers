@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:10:17 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/15 15:39:21 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 11:15:58 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	void	*mem;
+	void			*mem;
 	unsigned int	i;
 	char			*str;
 
@@ -35,11 +35,11 @@ void	*ft_calloc(size_t count, size_t size)
 
 void	ft_usleep(long time, t_philo *philo)
 {
-    long    start;
+	long	start;
 
-    start = get_time(philo);
-    while (get_time(philo) - start < time)
-        usleep(100);
+	start = get_time(philo);
+	while (get_time(philo) - start < time)
+		usleep(100);
 }
 
 void	free_philo(t_philo *philo, pthread_t *threads)
@@ -72,7 +72,8 @@ int	print_philo_state(t_philo *philo, char *state)
 	if (pthread_mutex_lock(&(philo->write_mutex)) == -1)
 		return (1);
 	if (philo->stop != 1)
-		printf("%ldms philo %d %s\n", time - philo->epoch_time_ms, philo->id, state);
+		printf("%ldms philo %d %s\n", time - philo->epoch_time_ms, \
+			philo->id, state);
 	if (pthread_mutex_unlock(&(philo->write_mutex)) == -1)
 		return (1);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 14:13:12 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/15 17:55:49 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:04:47 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_philo
 	struct s_philo	*p_right;
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	write_mutex;
+	pthread_mutex_t	death_mutex;
 	t_state			state;
 	long			epoch_time_ms;
 	long			last_meal_time;

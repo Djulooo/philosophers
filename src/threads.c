@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/15 18:00:12 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/16 11:16:40 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	mutex_lock(t_philo *data)
 		if (print_philo_state(data, "has taken a fork") == 1)
 			return (1);
 	}
-	else if (data->id != 1)
+	else
 	{
 		if (pthread_mutex_lock(&(data->p_right->mutex)) == 1)
 			return (1);
@@ -54,7 +54,7 @@ static int	mutex_eat_unlock(t_philo *data)
 		pthread_mutex_unlock(&(data->mutex));
 		pthread_mutex_unlock(&(data->p_right->mutex));
 	}
-	else if (data->id != 1)
+	else
 	{
 		pthread_mutex_unlock(&(data->p_right->mutex));
 		pthread_mutex_unlock(&(data->mutex));
@@ -72,16 +72,16 @@ void	*thread_func(void *arg)
 	int		meals;
 
 	data = (t_philo *)arg;
-	if (data->id % 2 == 1)
+	if (data->id % 2 == 0)
 		ft_usleep(data->n_time_to_eat, data);
 	meals = data->n_eat;
-	while (data->stop != 1 && data->state != FULL)
+	while (data->state != FULL)
 	{
 		if (data->stop == 1)
 			break ;
-		if (data->stop != 1 && mutex_lock(data) == 1)
+		if (mutex_lock(data) == 1)
 			return (NULL);
-		if (data->stop != 1 && mutex_eat_unlock(data) == 1)
+		if (mutex_eat_unlock(data) == 1)
 			return (NULL);
 		if (meals > 0)
 			meals--;
