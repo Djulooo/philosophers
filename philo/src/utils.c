@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:10:17 by jlaisne           #+#    #+#             */
-/*   Updated: 2023/05/16 14:48:15 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/17 13:26:18 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	print_philo_state(t_philo *philo, char *state)
 	if (pthread_mutex_lock(&(philo->write_mutex)) == -1)
 		return (1);
 	if (philo->stop != 1)
-		printf("%ldms philo %d %s\n", time - philo->epoch_time_ms, \
+		printf("%ld philo %d %s\n", time - philo->epoch_time_ms, \
 			philo->id, state);
 	if (pthread_mutex_unlock(&(philo->write_mutex)) == -1)
 		return (1);
