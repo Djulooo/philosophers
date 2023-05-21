@@ -6,7 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 01:02:27 by juleslaisne       #+#    #+#             */
-/*   Updated: 2023/05/16 16:21:24 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/05/21 13:57:35 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static int	philo_sleep(t_philo *data)
 	data->state = THINKING;
 	if (print_philo_state(data, "is thinking") == 1)
 		return (1);
+	if (data->id == 3 && data->n_philo == 2)
+		ft_usleep(100, data);
 	return (0);
 }
 
